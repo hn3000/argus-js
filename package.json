@@ -1,0 +1,33 @@
+{
+  "name": "@hn3000/argus",
+  "private": false,
+  "version": "0.1.0",
+  "description": "file watcher, can watch multiple patterns, run multiple targets",
+  "repository": "hn3000/argus",
+  "main": "out/index.js",
+  "bin": "out/cli.js",
+  "scripts": {
+    "prepublishOnly": "tsc",
+    "tsc": "tsc",
+    "test": "out/test/alltests.js"
+  },
+  "keywords": [
+    "file",
+    "watcher"
+  ],
+  "author": "Harald Niesche",
+  "license": "MIT",
+  "files": [
+    "out"
+  ],
+  "dependencies": {
+    "chokidar": "^1.7.0",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "@types/chokidar": "^1.7.0",
+    "@types/lodash": "^4.14.66",
+    "typescript": "^2.3.4"
+  },
+  "false": {}
+}
