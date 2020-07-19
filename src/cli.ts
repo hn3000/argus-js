@@ -64,6 +64,7 @@ let options: IWatchOptions = {
 
 let isOption: false | string = false;
 let paths = [];
+let printUsage = false;
 
 for (let a of argv) {
   //console.log(a);
@@ -75,6 +76,10 @@ for (let a of argv) {
         dryrun = true;
         options.cmdCB = logCB;
         isOption = false;
+        break;
+      case '--help':
+      case '-?':
+        printUsage = true;
         break;
       default:
         isOption = a;
@@ -119,9 +124,14 @@ if (0 != paths.length) {
   options.paths['rest'] = paths;
 }
 
-console.log('watching', [].concat(...Object.keys(options.paths).map(p => options.paths[p])));
-//console.log(JSON.stringify(options, null, 2));
+if (printUsage) {
+  console.log(usage);
+} else {
+  console.log('watching', [].concat(...Object.keys(options.paths).map(p => options.paths[p])));
+  //console.log(JSON.stringify(options, null, 2));
+  
+  let watcher = watchAll(options);
+  
+  //watcher.show();
+}
 
-let watcher = watchAll(options);
-
-//watcher.show();
