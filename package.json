@@ -1,7 +1,7 @@
 {
   "name": "@hn3000/argus",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "file watcher, can watch multiple patterns, run multiple targets",
   "repository": "hn3000/argus",
   "main": "out/index.js",
