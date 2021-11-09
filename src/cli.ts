@@ -7,17 +7,40 @@ import { platform } from 'os';
 
 
 let usage = (
-`argus path1.1 [...path1.n] -r cmd1 ... pathN.1 [...pathN.n] -r cmdN
-    pathX.Y: path to watch
-    cmdX: cmd to run if any of pathX.Y has a change observed
+`argus [...options] path1.1 [...path1.n] -r <cmd1> [... pathN.1 [...pathN.n] -r <cmdN>]
+      pathX.Y: path pattern to watch, e.g. src/*.js, data/**/*.json
+               patterns must be understood by chokidar
+      cmdX: cmd to run if any of pathX.Y has a change observed
+            every set of path patterns must be followed by -r <cmd> or --run <cmd>
+    options:
+      -n, --dryrun, --dry-run: 
+        only show commands that would run, don't actually run them
+
+      -d <ms>, --debounce <ms>:
+        wait <ms> after detecting a change
+
+      -t <ms>, --throttle <ms>:
+        do not run more often than every <ms>
+
+      -b, --basecmd:
+        specify a prefix for cmd given in -r, default is equivalent to
+        -b npm -b run
+
+      -r <cmd>, --run <cmd>:
+        give a command to run when a change is detected in the files
+        matching the path patterns given before this option
+        starts a new set of patterns to watch
+
+      -?, --help:
+        print this help message
 `
 );
 
 let argv = process.argv.slice(2);
 
 function stripQuotes(x: string) {
-  let first = x.substr(0, 1), 
-      last = x.substr(-1, 1);
+  let first = x.substring(0, 1), 
+      last = x.substring(x.length - 1, 1);
   if (first === last && first === '"' || first === "'") {
     return x.substring(1, x.length-1);
   }
@@ -68,7 +91,7 @@ let printUsage = false;
 
 for (let a of argv) {
   //console.log(a);
-  if (0 == a.indexOf('-')) {
+  if (a.startsWith('-')) {
     switch (a) {
       case '-n':
       case '--dryrun':
@@ -87,11 +110,6 @@ for (let a of argv) {
     }
   } else {
     switch (isOption) {
-      case '-n':
-      case '--dryrun':
-      case '--dry-run':
-        options.basecmd.unshift('echo');
-        break;
       case '-t':
       case '--throttle':
         options.throttleMS = parseInt(a);
@@ -124,9 +142,20 @@ if (0 != paths.length) {
   options.paths['rest'] = paths;
 }
 
-if (printUsage) {
+if (printUsage || argv.length === 0 || options.paths['rest']) {
   console.log(usage);
+  if(options.paths['rest']) {
+    console.log(
+`
+  make sure to follow every set of paths / patterns with -r or --run
+`
+    )
+  }
 } else {
+  if (dryrun) {
+    options.basecmd.unshift('echo');
+  }
+  
   console.log('watching', [].concat(...Object.keys(options.paths).map(p => options.paths[p])));
   //console.log(JSON.stringify(options, null, 2));
   

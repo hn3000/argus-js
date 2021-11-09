@@ -74,8 +74,8 @@ export class CompoundWatcher implements ICompoundWatcher {
       if (!Array.isArray(watched)) {
         watched = [ watched ];
       }
-      let ignored = watched.filter(x => x.substr(0, 1) === '!').map(x => x.substr(1));
-      watched = watched.filter(x => x.substr(0, 1) !== '!');
+      let ignored = watched.filter(x => x.substring(0, 1) === '!').map(x => x.substring(1));
+      watched = watched.filter(x => x.substring(0, 1) !== '!');
       watchers[i] = chokidar.watch(watched, { ...watchOpts, ignored })
       let listener = runner(c);
       watchers[i].addListener('all', listener);
