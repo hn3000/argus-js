@@ -6,7 +6,7 @@ import * as childProcess from 'child_process';
 import { platform } from 'os';
 
 
-let usage = (
+const usage = (
 `argus [...options] path1.1 [...path1.n] -r <cmd1> [... pathN.1 [...pathN.n] -r <cmdN>]
       pathX.Y: path pattern to watch, e.g. src/*.js, data/**/*.json
                patterns must be understood by chokidar
@@ -17,7 +17,7 @@ let usage = (
         only show commands that would run, don't actually run them
 
       -d <ms>, --debounce <ms>:
-        wait <ms> after detecting a change
+        wait <ms> after detecting a change, default is 1500, give 0 to disable
 
       -t <ms>, --throttle <ms>:
         do not run more often than every <ms>
@@ -33,6 +33,13 @@ let usage = (
 
       -?, --help:
         print this help message
+`
+);
+
+// shown if patterns without -r / --run are found
+const restWarning = (
+`
+  make sure to follow every set of paths / patterns with -r or --run
 `
 );
 
@@ -145,11 +152,7 @@ if (0 != paths.length) {
 if (printUsage || argv.length === 0 || options.paths['rest']) {
   console.log(usage);
   if(options.paths['rest']) {
-    console.log(
-`
-  make sure to follow every set of paths / patterns with -r or --run
-`
-    )
+    console.log(restWarning)
   }
 } else {
   if (dryrun) {

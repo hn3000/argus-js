@@ -45,3 +45,4 @@ Patterns supported are the extended wildcards understood by [chokidar](https://g
  * `t <ms>`, `-throttle <ms>`: throttle change events to less than one per number of milliseconds given (Default is no throttle.)
  * `-d <ms>`, `--debounce <ms>`: debounce change events to occur only after the given number of milliseconds has passed without further changes. (Default debounce time is 1500 milliseconds. Specify 0 to disable.)
  * `-b <basecmd>`, `--basecmd <basecmd>`: base command, default is 'npm run', will be prepended to whatever is given as -r
+ * `-r <cmd>`, `--run <cmd>`: command to run if a change was detected, every set of patterns must be followed by this option
